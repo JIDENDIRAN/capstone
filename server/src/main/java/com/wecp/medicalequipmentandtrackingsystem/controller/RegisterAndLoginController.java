@@ -20,6 +20,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 @RestController
 public class RegisterAndLoginController {
+
     @Autowired
     private UserService userService;
 
@@ -31,58 +32,25 @@ public class RegisterAndLoginController {
 
     @PostMapping("/api/user/register")
     public ResponseEntity<User> registerUser(@RequestBody User user) {
-        // register user and return the registered user with status code 201 created
-        // User cons=
-        // if(cons!=null){
-        // return new ResponseEntity<>(HttpStatus.CREATED);
-        // }
-        return new ResponseEntity<>(userService.registerUser(user),HttpStatus.CREATED);
+        User registeredUser = userService.registerUser(user);
+        return new ResponseEntity<>(registeredUser, HttpStatus.CREATED);
     }
 
     @PostMapping("/api/user/login")
     public ResponseEntity<LoginResponse> loginUser(@RequestBody LoginRequest loginRequest) {
-        // login user and return the login response with status code 200 ok
-        // if authentication fails, return status code 401 unauthorized
-            User user = userService.loginUser(loginRequest.getUsername(), loginRequest.getPassword());
-            if (user != null) {
-                    String token = jwtUtil.generateToken(loginRequest.getUsername());
-                    LoginResponse response = new LoginResponse(token, user.getUsername(), user.getEmail(), user.getRole());
-                    return ResponseEntity.ok(response);
-            } else {
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-            }
-                   
+        try {
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword())
+            );
+        } catch (AuthenticationException e) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid username or password", e);
+        }
+
+        final UserDetails userDetails = userService.loadUserByUsername(loginRequest.getUsername());
+        final String token = jwtUtil.generateToken(userDetails.getUsername());
+
+        User user = userService.getUserByUsername(loginRequest.getUsername());
+
+        return ResponseEntity.ok(new LoginResponse(token, user.getUsername(), user.getEmail(), user.getRole()));
+    }
 }
-
-}
-// @PostMapping("/api/user/register")
-//     public ResponseEntity<User> registerUser(@RequestBody User user) {
-//         User registeredUser = userService.registerUser(user);
-       
-//         return new ResponseEntity<>(registeredUser,HttpStatus.CREATED);
-//     }
- 
-//     @PostMapping("/api/user/login")
-//     public ResponseEntity<LoginResponse> loginUser(@RequestBody LoginRequest loginRequest) {
-//         User user = userService.loginUser(loginRequest.getUsername(), loginRequest.getPassword());
-//         if (user != null) {
-//             LoginResponse response = new LoginResponse("token", user.getUsername(), user.getEmail(), user.getRole());
-//             return ResponseEntity.ok(response);
-//         } else {
-//             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-//         }
-//     }
-
-
-
-  // User user = userService.loginUser(loginRequest.getUsername(), loginRequest.getPassword());
-                    // if (user != null) {
-                    //     LoginResponse response = new LoginResponse("token", user.getUsername(), user.getEmail(), user.getRole());
-                    //     return ResponseEntity.ok(response);
-                    // } else {
-                    //     return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-                    // }
-
-
-
-                   

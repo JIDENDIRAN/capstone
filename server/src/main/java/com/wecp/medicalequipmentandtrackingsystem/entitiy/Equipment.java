@@ -1,36 +1,20 @@
 package com.wecp.medicalequipmentandtrackingsystem.entitiy;
 
 
-//import java.util.List;
-
 import javax.persistence.*;
 
-//import antlr.collections.List;
 @Entity
-@Table(name = "equipments") 
-// do not change table name
-
+@Table(name = "equipments")
 public class Equipment {
-    @Id 
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private  String name;
-
+    private String name;
     private String description;
-
     @ManyToOne
-    Hospital hospital;
-
-    public Equipment() {
-    }
-
-    public Equipment(Long id, String name, String description, Hospital hospital) {
-        this.id = id;
-        this.name = name;
-        this.description = description;
-        this.hospital = hospital;
-    }
+    @JoinColumn(name = "hospital_id")
+    private Hospital hospital; // Many equipment can belong to one hospital
 
     public Long getId() {
         return id;
@@ -63,10 +47,4 @@ public class Equipment {
     public void setHospital(Hospital hospital) {
         this.hospital = hospital;
     }
-    
-
-    
-    
-
-    
 }

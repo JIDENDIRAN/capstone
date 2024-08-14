@@ -1,37 +1,26 @@
 package com.wecp.medicalequipmentandtrackingsystem.entitiy;
 
+
 import javax.persistence.*;
 import java.util.Date;
 
-@Table(name = "maintenances") // do not change table name
 @Entity
+@Table(name = "maintenances")
 public class Maintenance {
     @Id
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private Date scheduledDate;
     private Date completedDate;
     private String description;
-    private String status;
-   
+
+    private String status; // status field to track the status of the maintenance task
+    // Add other maintenance-related fields as needed
+
     @ManyToOne
-    private Equipment equipment;
-
-    public Maintenance() {
-    }
-
-    public Maintenance(Long id, Date scheduledDate, Date completedDate, String description, String status,
-            Equipment equipment) {
-        this.id = id;
-        this.scheduledDate = scheduledDate;
-        this.completedDate = completedDate;
-        this.description = description;
-        this.status = status;
-        this.equipment = equipment;
-    }
-
-
+    @JoinColumn(name = "equipment_id")
+    private Equipment equipment; // Many maintenance tasks can be associated with one equipment
 
     public Long getId() {
         return id;
@@ -65,18 +54,19 @@ public class Maintenance {
         this.description = description;
     }
 
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }    
     public Equipment getEquipment() {
         return equipment;
     }
 
     public void setEquipment(Equipment equipment) {
         this.equipment = equipment;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }

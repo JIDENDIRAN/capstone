@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface EquipmentRepository extends JpaRepository<Equipment,Long> {
+public interface EquipmentRepository extends JpaRepository<Equipment, Long>{
     // extent jpa repository and add custom methods if needed
+    List<Equipment> findByHospitalId(Long hospitalId);
 }

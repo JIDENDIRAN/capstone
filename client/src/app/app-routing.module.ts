@@ -2,17 +2,13 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { LoginComponent } from './login/login.component';
 import { RegistrationComponent } from './registration/registration.component';
-
-
-import { AppComponent } from './app.component';
 import { DashbaordComponent } from './dashbaord/dashbaord.component';
-
-
 import { CreatehospitalComponent } from './createhospital/createhospital.component';
 import { ScheduleMaintenanceComponent } from './schedule-maintenance/schedule-maintenance.component';
 import { RequestequipmentComponent } from './requestequipment/requestequipment.component';
 import { MaintenanceComponent } from './maintenance/maintenance.component';
 import { OrdersComponent } from './orders/orders.component';
+import { ErrorPageComponent } from './error-page/error-page.component';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -24,12 +20,11 @@ const routes: Routes = [
   { path: 'maintenance', component: MaintenanceComponent },  
   { path: 'orders', component: OrdersComponent },  
   { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
-
-  { path: '**', redirectTo: '/dashboard', pathMatch: 'full' },
+  { path: '**', component: ErrorPageComponent },  // Handle all other unknown routes
 ];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule],
 })
-export class AppRoutingModule {}
+export class AppRoutingModule { }
